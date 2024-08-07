@@ -17,7 +17,7 @@ regex_t *onigwrap_create(char *pattern, int len, int ignoreCase, int multiline)
 
     OnigUChar *stringStart = (OnigUChar*) pattern;
     OnigUChar *stringEnd   = (OnigUChar*) pattern + len;
-    
+
     onig_new(
         &reg,
         stringStart,
@@ -35,7 +35,7 @@ OnigRegion* onigwrap_region_new()
     return onig_region_new();
 }
 
-void onigwrap_region_free(OnigRegion *region)	
+void onigwrap_region_free(OnigRegion *region)
 {
     onig_region_free(region, 1);
 }
