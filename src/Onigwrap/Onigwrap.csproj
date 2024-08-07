@@ -4,11 +4,31 @@
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <LangVersion>8.0</LangVersion>
     <Description>Simple wrapper for Oniguruma.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <!-- Include native assets in nuget package -->
+  <ItemGroup>
+    <Content Include="../../runtimes/linux-x64/native/libonigwrap.so" PackagePath="runtimes/linux-x64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/linux-arm64/native/libonigwrap.so" PackagePath="runtimes/linux-arm64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/osx/native/libonigwrap.dylib" PackagePath="runtimes/osx/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/win-arm64/native/libonigwrap.dll" PackagePath="runtimes/win-arm64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/win-x64/native/libonigwrap.dll" PackagePath="runtimes/win-x64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/win-x86/native/libonigwrap.dll" PackagePath="runtimes/win-x86/native/" Pack="true" Visible="false" />
+  </ItemGroup>
+
+  <!-- Include README -->
+  <ItemGroup>
+    <None Include="../../README.md" PackagePath="/" Pack="true" Visible="false" />
+  </ItemGroup>
+
+  <!-- Include license notices -->
+  <ItemGroup>
+    <None Include="../../THIRD-PARTY-NOTICES.TXT" PackagePath="/" Pack="true" Visible="false" />
+  </ItemGroup>
 
 </Project>
