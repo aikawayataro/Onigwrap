@@ -1,8 +1,9 @@
 #include "onigwrap.h"
+#include <stddef.h>
 
 regex_t *onigwrap_create(char *pattern, int len, int ignoreCase, int multiline)
 {
-    regex_t *reg;
+    regex_t *reg = NULL;
 
     OnigErrorInfo einfo;
 
@@ -17,7 +18,7 @@ regex_t *onigwrap_create(char *pattern, int len, int ignoreCase, int multiline)
     OnigUChar *stringStart = (OnigUChar*) pattern;
     OnigUChar *stringEnd   = (OnigUChar*) pattern + len;
     
-    int res = onig_new(
+    onig_new(
         &reg,
         stringStart,
         stringEnd,
