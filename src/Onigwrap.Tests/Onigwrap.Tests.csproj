@@ -16,4 +16,7 @@
     <ProjectReference Include="../Onigwrap/Onigwrap.csproj" />
   </ItemGroup>
 
+  <!-- Copy native assets when testing -->
+  <Import Project="../../build/NativeAssets.targets" />
+
 </Project>

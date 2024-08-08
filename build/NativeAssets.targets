@@ -1,0 +1,26 @@
+<Project>
+  <!-- Logic is adapted from SkiaSharp -->
+  <!-- This file is for internal use only, so the conditions here are simplified -->
+  <!-- dotnet will copy the appropriate native if the external project uses Onigwrap as a nuget package -->
+
+  <!-- No runtime specified, try to copy what is appropriate -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == ''">
+    <!-- Windows -->
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/win-x64/native/libonigwrap.*" Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU' or '$(Platform)' == 'Any CPU'" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/win-$(Platform.ToLower())/native/libonigwrap.*" Condition="'$(Platform)' != '' and '$(Platform)' != 'AnyCPU' and '$(Platform)' != 'Any CPU'" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+
+    <!-- OSX -->
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/osx/native/libonigwrap.*" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+
+    <!-- Linux -->
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/linux-x64/native/libonigwrap.*" Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU' or '$(Platform)' == 'Any CPU'" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/linux-$(Platform.ToLower())/native/libonigwrap.*" Condition="'$(Platform)' != '' and '$(Platform)' != 'AnyCPU' and '$(Platform)' != 'Any CPU'" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Runtime specified -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/osx/native/libonigwrap.*" Condition="('$(RuntimeIdentifier)' == 'osx') or ('$(RuntimeIdentifier)' == 'osx-x64') or ('$(RuntimeIdentifier)' == 'osx-arm64')" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)/../runtimes/$(RuntimeIdentifier)/native/libonigwrap.*" Condition="!(('$(RuntimeIdentifier)' == 'osx') or ('$(RuntimeIdentifier)' == 'osx-x64') or ('$(RuntimeIdentifier)' == 'osx-arm64'))" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
