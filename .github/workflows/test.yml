@@ -20,6 +20,9 @@ jobs:
           - name: Windows x64
             os: windows-latest
             runtime: win-x64
+          - name: Windows x86
+            os: windows-latest
+            runtime: win-x86
           - name: MacOS x86_64
             os: macos-13
             runtime: osx-x64
