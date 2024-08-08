@@ -5,7 +5,7 @@ namespace Onigwrap.Internal
 {
     internal unsafe class OnigInterop
     {
-        private const string ONIGWRAP = "onigwrap";
+        private const string ONIGWRAP = "libonigwrap";
         private const CharSet charSet = CharSet.Unicode;
         private const CallingConvention convention = CallingConvention.Cdecl;
 
