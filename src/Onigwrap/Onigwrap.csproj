@@ -15,6 +15,8 @@
   <ItemGroup>
     <Content Include="../../runtimes/linux-x64/native/libonigwrap.so" PackagePath="runtimes/linux-x64/native/" Pack="true" Visible="false" />
     <Content Include="../../runtimes/linux-arm64/native/libonigwrap.so" PackagePath="runtimes/linux-arm64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/linux-musl-x64/native/libonigwrap.so" PackagePath="runtimes/linux-musl-x64/native/" Pack="true" Visible="false" />
+    <Content Include="../../runtimes/linux-musl-arm64/native/libonigwrap.so" PackagePath="runtimes/linux-musl-arm64/native/" Pack="true" Visible="false" />
     <Content Include="../../runtimes/osx/native/libonigwrap.dylib" PackagePath="runtimes/osx/native/" Pack="true" Visible="false" />
     <Content Include="../../runtimes/win-arm64/native/libonigwrap.dll" PackagePath="runtimes/win-arm64/native/" Pack="true" Visible="false" />
     <Content Include="../../runtimes/win-x64/native/libonigwrap.dll" PackagePath="runtimes/win-x64/native/" Pack="true" Visible="false" />
