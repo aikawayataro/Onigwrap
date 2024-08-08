@@ -1,0 +1,180 @@
+name: Build Onigwrap native assets
+
+on:
+  push:
+    paths:
+      - ./onigwrap/**
+      - ./ci/**
+      - ./github/workflows/build-onigwrap.yml
+  workflow_call:
+
+env:
+  ONIGURUMA_REF: v6.9.9
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - name: Linux x86_64
+            os: ubuntu-20.04
+            host: x86_64-linux-gnu
+            libname: libonigwrap.so
+            script: generic
+          - name: Linux aarch64
+            os: ubuntu-20.04
+            host: aarch64-linux-gnu
+            libname: libonigwrap.so
+            script: generic
+          - name: Linux x86_64 musl
+            os: ubuntu-22.04
+            host: x86_64-linux-musl
+            libname: libonigwrap.so
+            script: generic
+          - name: Linux aarch64 musl
+            os: ubuntu-22.04
+            host: aarch64-linux-musl
+            libname: libonigwrap.so
+            script: generic
+          - name: Windows x64
+            os: windows-2022
+            host: x86_64-w64-mingw32
+            msystem: MINGW64
+            install: mingw-w64-x86_64-autotools mingw-w64-x86_64-toolchain
+            libname: libonigwrap.dll
+            script: generic
+          - name: Windows x86
+            os: windows-2022
+            host: i686-w64-mingw32
+            msystem: MINGW32
+            install: mingw-w64-i686-autotools mingw-w64-i686-toolchain
+            libname: libonigwrap.dll
+            script: generic
+          - name: Windows ARM64
+            os: windows-2022
+            host: aarch64-w64-mingw32
+            msystem: CLANG64
+            install: mingw-w64-clang-x86_64-autotools mingw-w64-cross-clang-toolchain mingw-w64-clang-x86_64-toolchain
+            libname: libonigwrap.dll
+            script: mingw-w64-cross-clang
+          - name: OSX
+            os: macos-13
+            host: osx-universal
+            libname: libonigwrap.dylib
+            script: osx
+          - name: Wasm emsdk-2.0.23
+            os: ubuntu-20.04
+            host: emsdk-2.0.23
+            emsdk_version: 2.0.23
+            libname: libonigwrap.a
+            script: wasm
+          - name: Wasm emsdk-3.1.12
+            os: ubuntu-20.04
+            host: emsdk-3.1.12
+            emsdk_version: 3.1.12
+            libname: libonigwrap.a
+            script: wasm
+          - name: Wasm emsdk-3.1.34
+            os: ubuntu-20.04
+            host: emsdk-3.1.34
+            emsdk_version: 3.1.34
+            libname: libonigwrap.a
+            script: wasm
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.msystem != '' && 'msys2 {0}' || 'bash' }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Checkout oniguruma
+        uses: actions/checkout@v4
+        with:
+          repository: kkos/oniguruma
+          ref: ${{ env.ONIGURUMA_REF }}
+          path: oniguruma
+      - name: Checkout emsdk
+        if: ${{ matrix.emsdk_version != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+      - name: Install libtool
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install libtool-bin
+      - name: Configure arm64 packages
+        if: ${{ startsWith(matrix.host, 'aarch64-linux-') }}
+        run: |
+          sudo dpkg --add-architecture arm64
+          source /etc/os-release
+          echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $VERSION_CODENAME main restricted universe
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $VERSION_CODENAME-updates main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ $VERSION_CODENAME-backports main restricted" \
+          | sudo tee /etc/apt/sources.list.d/arm64.list
+          sudo sed -i -e 's/^deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+          sudo sed -i -e 's/^deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
+      - name: Install cross-compiling dependencies
+        if: ${{ startsWith(matrix.host, 'aarch64-linux-') }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcc-aarch64-linux-gnu
+      - name: Install musl-tools
+        if: ${{ endsWith(matrix.host, '-musl') }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install musl-tools:${{ startsWith(matrix.host, 'aarch64-') && 'arm64' || 'amd64' }}
+      - name: Install automake
+        if: ${{ matrix.host == 'osx-universal' }}
+        run: brew install automake
+      - name: Setup MSYS2
+        if: ${{ matrix.msystem != '' }}
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          install: ${{ matrix.install }}
+      - name: Setup emsdk
+        if: ${{ matrix.emsdk_version != '' }}
+        env:
+          EMSDK_VERSION: ${{ matrix.emsdk_version }}
+        run: |
+          cd emsdk
+          ./emsdk install "$EMSDK_VERSION"
+          ./emsdk activate "$EMSDK_VERSION"
+      - name: Build
+        env:
+          _HOST: ${{ matrix.host }}
+          _LIBNAME: ${{ matrix.libname }}
+        run: ./ci/build-onigwrap.${{ matrix.script }}.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.host }}.${{ matrix.libname }}
+          path: ${{ matrix.libname }}
+  pack_runtimes:
+    needs: build
+    name: Pack runtimes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*.libonigwrap.*"
+          path: artifacts
+      - name: Organize runtimes
+        run: |
+          install -D artifacts/x86_64-linux-gnu.libonigwrap.so/libonigwrap.so -t runtimes/linux-x64/native
+          install -D artifacts/aarch64-linux-gnu.libonigwrap.so/libonigwrap.so -t runtimes/linux-arm64/native
+          install -D artifacts/x86_64-linux-musl.libonigwrap.so/libonigwrap.so -t runtimes/linux-musl-x64/native
+          install -D artifacts/aarch64-linux-musl.libonigwrap.so/libonigwrap.so -t runtimes/linux-musl-arm64/native
+          install -D artifacts/osx-universal.libonigwrap.dylib/libonigwrap.dylib -t runtimes/osx/native
+          install -D artifacts/aarch64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-arm64/native
+          install -D artifacts/x86_64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x64/native
+          install -D artifacts/i686-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x86/native
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtimes
+          path: runtimes

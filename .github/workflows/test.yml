@@ -1,0 +1,45 @@
+name: Test and build Onigwrap
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build_native_assets:
+    name: Build native assets
+    uses: ./.github/workflows/build-onigwrap.yml
+  build_and_test:
+    needs: build_native_assets
+    strategy:
+      matrix:
+        include:
+          - name: Linux x86_64
+            os: ubuntu-latest
+            runtime: linux-x64
+          - name: Windows x64
+            os: windows-latest
+            runtime: win-x64
+          - name: MacOS x86_64
+            os: macos-13
+            runtime: osx-x64
+          - name: MacOS arm64
+            os: macos-latest
+            runtime: osx-arm64
+    name: Build and test (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+      - name: Download runtimes
+        uses: actions/download-artifact@v4
+        with:
+          name: runtimes
+          path: runtimes
+      - name: Test
+        # If RID is specified, you should not use --no-restore and --no-build
+        run: dotnet test --verbosity normal -c Release -r ${{ matrix.runtime }} -p:SelfContained=false
