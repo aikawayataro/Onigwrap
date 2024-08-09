@@ -14,6 +14,8 @@
     <Copyright>Copyright (c) 2024 Aikawa Yataro</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Onigwrap.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <!-- Include native assets in nuget package -->
