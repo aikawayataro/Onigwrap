@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
 
-using Onigwrap;
-
 namespace Onigwrap.Tests
 {
     class OnigRegExpTests
