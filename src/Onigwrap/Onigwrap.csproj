@@ -8,6 +8,10 @@
     <LangVersion>8.0</LangVersion>
     <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
     <Description>Simple wrapper for Oniguruma.</Description>
+    <Authors>Aikawa Yataro</Authors>
+    <PackageProjectUrl>https://github.com/aikawayataro/Onigwrap</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/aikawayataro/Onigwrap.git</RepositoryUrl>
+    <Copyright>Copyright (c) 2024 Aikawa Yataro</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
