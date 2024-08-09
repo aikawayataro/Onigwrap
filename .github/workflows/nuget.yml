@@ -39,7 +39,7 @@ jobs:
       - name: Pack
         run: dotnet pack -c Release -o .
       - name: Publish
-        run: dotnet nuget push "Onigwrap.${{ steps.version.outputs.version }}.nupkg" -k "${{ secrets.NUGET_API_KEY }}"
+        run: dotnet nuget push "Onigwrap.${{ steps.version.outputs.version }}.nupkg" -k "${{ secrets.NUGET_API_KEY }}" -s https://api.nuget.org/v3/index.json
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
