@@ -1,4 +1,4 @@
-name: Build NuGet package
+name: Publish NuGet package
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - v*
 
 jobs:
-  build_native_assets:
-    name: Build native assets
-    uses: ./.github/workflows/build-onigwrap.yml
+  build_and_test:
+    name: Build and test
+    uses: ./.github/workflows/test.yml
   build:
-    needs: build_native_assets
+    needs: build_and_test
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +38,8 @@ jobs:
         run: dotnet test -c Release --no-restore --no-build --verbosity normal
       - name: Pack
         run: dotnet pack -c Release -o .
+      - name: Publish
+        run: dotnet nuget push "Onigwrap.${{ steps.version.outputs.version }}.nupkg" -k "${{ secrets.NUGET_API_KEY }}"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
