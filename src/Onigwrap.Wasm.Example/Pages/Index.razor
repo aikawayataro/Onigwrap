@@ -1,0 +1,49 @@
+﻿@page "/"
+
+<h1>Example</h1>
+
+<div>
+    <label>Regex:</label>
+    <InputText @bind-Value="regex" />
+</div>
+
+<div>
+    <label>Text:</label>
+    <InputText @bind-Value="text" />
+</div>
+
+<button class="btn btn-primary" @onclick="RunRegex">Run regex</button>
+
+@if (result != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Location</th>
+                <th>Length</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < result.Count(); i++)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@result.LocationAt(i)</td>
+                    <td>@result.LengthAt(i)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private OnigResult result = null;
+    private string regex = "";
+    private string text = "";
+
+    private void RunRegex() {
+        var oregex = new ORegex(regex);
+        result = oregex.SafeSearch(text);
+    }
+}

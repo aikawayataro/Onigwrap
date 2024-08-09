@@ -18,6 +18,6 @@ emmake make install
 
 popd
 
-emmake libtool --tag=CC --mode=compile emcc -c onigwrap/onigwrap.c -O2 -s -I./buildprefix/include -o wrap.lo
-emmake libtool --tag=CC --mode=link emcc -static wrap.lo -o wrap.a
-emmake libtool --tag=CC --mode=link emcc -all-static wrap.a ./buildprefix/lib/libonig.a -o "$_LIBNAME"
+emcc -c onigwrap/onigwrap.c -O2 -s -I./buildprefix/include -o onigwrap.o
+cp ./buildprefix/lib/libonig.a "$_LIBNAME"
+emar -rs "$_LIBNAME" onigwrap.o

@@ -173,6 +173,9 @@ jobs:
           install -D artifacts/aarch64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-arm64/native
           install -D artifacts/x86_64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x64/native
           install -D artifacts/i686-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x86/native
+          install -D artifacts/emsdk-2.0.23.libonigwrap.a/libonigwrap.a -t runtimes/wasm/2.0.23
+          install -D artifacts/emsdk-3.1.12.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.12
+          install -D artifacts/emsdk-3.1.34.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.34
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
