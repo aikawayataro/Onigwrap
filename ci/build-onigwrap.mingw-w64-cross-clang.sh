@@ -3,6 +3,7 @@
 set -e
 
 export CC=/opt/$_HOST/bin/$_HOST-clang
+export CFLAGS="-O2 -s"
 
 mkdir -p buildprefix
 
@@ -15,4 +16,4 @@ make install
 
 popd
 
-$CC -shared onigwrap/onigwrap.c -O2 -s -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"
+$CC -shared onigwrap/onigwrap.c $CFLAGS -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"

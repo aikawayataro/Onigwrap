@@ -64,19 +64,31 @@ jobs:
             script: osx
           - name: Wasm emsdk-2.0.23
             os: ubuntu-20.04
-            host: emsdk-2.0.23
+            host: emsdk-2.0.23-st
             emsdk_version: 2.0.23
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.12
             os: ubuntu-20.04
-            host: emsdk-3.1.12
+            host: emsdk-3.1.12-st
             emsdk_version: 3.1.12
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.34
             os: ubuntu-20.04
-            host: emsdk-3.1.34
+            host: emsdk-3.1.34-st
+            emsdk_version: 3.1.34
+            libname: libonigwrap.a
+            script: wasm
+          - name: Wasm emsdk-3.1.12 (pthreads)
+            os: ubuntu-20.04
+            host: emsdk-3.1.12-mt
+            emsdk_version: 3.1.12
+            libname: libonigwrap.a
+            script: wasm
+          - name: Wasm emsdk-3.1.34 (pthreads)
+            os: ubuntu-20.04
+            host: emsdk-3.1.34-mt
             emsdk_version: 3.1.34
             libname: libonigwrap.a
             script: wasm
@@ -173,9 +185,11 @@ jobs:
           install -D artifacts/aarch64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-arm64/native
           install -D artifacts/x86_64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x64/native
           install -D artifacts/i686-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x86/native
-          install -D artifacts/emsdk-2.0.23.libonigwrap.a/libonigwrap.a -t runtimes/wasm/2.0.23
-          install -D artifacts/emsdk-3.1.12.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.12
-          install -D artifacts/emsdk-3.1.34.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.34
+          install -D artifacts/emsdk-2.0.23-st.libonigwrap.a/libonigwrap.a -t runtimes/wasm/2.0.23/st
+          install -D artifacts/emsdk-3.1.12-st.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.12/st
+          install -D artifacts/emsdk-3.1.34-st.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.34/st
+          install -D artifacts/emsdk-3.1.12-mt.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.12/mt
+          install -D artifacts/emsdk-3.1.34-mt.libonigwrap.a/libonigwrap.a -t runtimes/wasm/3.1.34/mt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
