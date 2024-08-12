@@ -1,6 +1,6 @@
 <Project>
 
-  <ItemGroup Condition="(('$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true') or ('$(UsingBrowserRuntimeWorkload)' == true)) and '$(TargetFrameworkVersion)' != ''">
+  <ItemGroup Condition="(('$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true') or ('$(UsingBrowserRuntimeWorkload)' == 'true')) and '$(TargetFrameworkVersion)' != ''">
     <NativeFileReference Include="$(OmigwrapWasmLibraryPath)/2.0.23/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" />
     <NativeFileReference Include="$(OmigwrapWasmLibraryPath)/3.1.12/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0'))" />
     <NativeFileReference Include="$(OmigwrapWasmLibraryPath)/3.1.34/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0'))" />
