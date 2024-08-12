@@ -23,9 +23,14 @@
     <Content Include="$(MSBuildThisFileDirectory)/../runtimes/$(RuntimeIdentifier)/native/libonigwrap.*" Condition="!(('$(RuntimeIdentifier)' == 'osx') or ('$(RuntimeIdentifier)' == 'osx-x64') or ('$(RuntimeIdentifier)' == 'osx-arm64'))" Visible="false" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <!-- Wasm -->
   <ItemGroup Condition="(('$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true') or ('$(UsingBrowserRuntimeWorkload)' == 'true')) and '$(TargetFrameworkVersion)' != ''">
-    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/2.0.23/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" />
-    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.12/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0'))" />
-    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.34/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0'))" />
+    <!-- Without threading support -->
+    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/2.0.23/st/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) and ('$(WasmEnableThreads)' != 'true')" />
+    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.12/st/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) and ('$(WasmEnableThreads)' != 'true')" />
+    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.34/st/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) and ('$(WasmEnableThreads)' != 'true')" />
+    <!-- With threading support -->
+    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.12/mt/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) and ('$(WasmEnableThreads)' == 'true')" />
+    <NativeFileReference Include="$(MSBuildThisFileDirectory)/../runtimes/wasm/3.1.34/mt/libonigwrap.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0')) and ('$(WasmEnableThreads)' == 'true')" />
   </ItemGroup>
 </Project>
