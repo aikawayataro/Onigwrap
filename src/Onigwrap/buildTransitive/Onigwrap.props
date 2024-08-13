@@ -1,11 +1,11 @@
 <Project>
 
   <PropertyGroup>
-    <OmigwrapWasmLibraryPath>$(MSBuildThisFileDirectory)/wasm</OmigwrapWasmLibraryPath>
+    <OnigwrapWasmLibraryPath>$(MSBuildThisFileDirectory)/wasm</OnigwrapWasmLibraryPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <OnigwrapWasmLibrary Include="$(OmigwrapWasmLibraryPath)/**/libonigwrap.a" />
+    <OnigwrapWasmLibrary Include="$(OnigwrapWasmLibraryPath)/**/libonigwrap.a" />
   </ItemGroup>
 
 </Project>
