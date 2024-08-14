@@ -54,7 +54,7 @@ namespace Onigwrap
         /// <returns></returns>
         public unsafe OnigResult SafeSearch(string text, int offset = 0)
         {
-            if (!Valid) throw new ArgumentException(string.Format("Invalid regular expression: {0}", _regexString));
+            if (!Valid) throw new ArgumentException($"Invalid regular expression: {_regexString}");
 
             lock (_syncObject)
             {
