@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Onigwrap
 {
-    class OnigNextMatchResult : IOnigNextMatchResult
+    sealed class OnigNextMatchResult : IOnigNextMatchResult
     {
         private int _index;
 
@@ -43,9 +43,9 @@ namespace Onigwrap
                 result.Append(captureIndex);
                 i++;
             }
-            result.Append("\n");
+            result.Append('\n');
             result.Append("  ]\n");
-            result.Append("}");
+            result.Append('}');
             return result.ToString();
         }
 
@@ -64,7 +64,7 @@ namespace Onigwrap
             return captures;
         }
 
-        class OnigCaptureIndex : IOnigCaptureIndex
+        sealed class OnigCaptureIndex : IOnigCaptureIndex
         {
             public int Index { get; private set; }
             public int Start { get; private set; }
@@ -89,7 +89,7 @@ namespace Onigwrap
                 result.Append(End);
                 result.Append(", \"length\": ");
                 result.Append(Length);
-                result.Append("}");
+                result.Append('}');
                 return result.ToString();
             }
         }
