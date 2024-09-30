@@ -2,7 +2,7 @@
 #include <stddef.h>
 
 regex_t *
-onigwrap_create(char *pattern, int len, int ignoreCase, int multiline) {
+onigwrap_create(const char *pattern, int len, int ignoreCase, int multiline) {
     regex_t *reg = NULL;
 
     OnigErrorInfo einfo;
@@ -15,8 +15,8 @@ onigwrap_create(char *pattern, int len, int ignoreCase, int multiline) {
     if (multiline == 1)
         onigOptions |= ONIG_OPTION_MULTILINE;
 
-    OnigUChar *stringStart = (OnigUChar *)pattern;
-    OnigUChar *stringEnd = (OnigUChar *)pattern + len;
+    const OnigUChar *stringStart = (const void *)pattern;
+    const OnigUChar *stringEnd = stringStart + len;
 
     onig_new(
         &reg, stringStart, stringEnd, onigOptions, ONIG_ENCODING_UTF16_LE,
@@ -26,7 +26,7 @@ onigwrap_create(char *pattern, int len, int ignoreCase, int multiline) {
     return reg;
 }
 
-OnigRegion *onigwrap_region_new() {
+OnigRegion *onigwrap_region_new(void) {
     return onig_region_new();
 }
 
@@ -39,12 +39,13 @@ void onigwrap_free(regex_t *reg) {
 }
 
 int onigwrap_search(
-    regex_t *reg, char *charPtr, int offset, int length, OnigRegion *region
+    regex_t *reg, const char *charPtr, int offset, int length,
+    OnigRegion *region
 ) {
-    OnigUChar *stringStart = (OnigUChar *)charPtr;
-    OnigUChar *stringEnd = (OnigUChar *)(charPtr + length);
-    OnigUChar *stringOffset = (OnigUChar *)(charPtr + offset);
-    OnigUChar *stringRange = (OnigUChar *)stringEnd;
+    const OnigUChar *stringStart = (const void *)charPtr;
+    const OnigUChar *stringEnd = (const void *)(charPtr + length);
+    const OnigUChar *stringOffset = (const void *)(charPtr + offset);
+    const OnigUChar *stringRange = stringEnd;
 
     int result = onig_search(
         reg, stringStart, stringEnd, stringOffset, stringRange, region,
@@ -53,24 +54,24 @@ int onigwrap_search(
     return result;
 }
 
-int onigwrap_num_regs(OnigRegion *region) {
+int onigwrap_num_regs(const OnigRegion *region) {
     return region->num_regs;
 }
 
-int onigwrap_pos(OnigRegion *region, int nth) {
+int onigwrap_pos(const OnigRegion *region, int nth) {
     if (nth < region->num_regs) {
         int result = region->beg[nth];
         if (result < 0)
             return result;
-        return result >> 1;
+        return result / 2;
     }
     return -1;
 }
 
-int onigwrap_len(OnigRegion *region, int nth) {
+int onigwrap_len(const OnigRegion *region, int nth) {
     if (nth < region->num_regs) {
         int result = region->end[nth] - region->beg[nth];
-        return result >> 1;
+        return result / 2;
     }
     return -2;
 }
