@@ -7,3 +7,11 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = false
 insert_final_newline = true
+
+[*.{csproj,targets,props}]
+charset = utf-8
+indent_size = 2
+
+[*.yml]
+charset = utf-8
+indent_size = 2
