@@ -18,6 +18,10 @@ namespace Onigwrap
             _regex = new ORegex(source, false, false);
         }
 
+        public OnigResult Search(string str, int position)
+        {
+            return Search(str.AsMemory(), position);
+        }
         public OnigResult Search(ReadOnlyMemory<char> str, in int position)
         {
             if (_lastSearchString.Equals(str) && _lastSearchPosition <= position &&
