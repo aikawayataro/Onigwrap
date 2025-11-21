@@ -25,10 +25,10 @@ jobs:
             os: windows-latest
             runtime: win-x86
           - name: MacOS x86_64
-            os: macos-13
+            os: macos-15-intel
             runtime: osx-x64
           - name: MacOS arm64
-            os: macos-latest
+            os: macos-15
             runtime: osx-arm64
     name: Build and test (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
@@ -45,5 +45,4 @@ jobs:
           name: runtimes
           path: runtimes
       - name: Test
-        # If RID is specified, you should not use --no-restore and --no-build
         run: dotnet test --verbosity normal -c Release -r ${{ matrix.runtime }} -p:SelfContained=false
