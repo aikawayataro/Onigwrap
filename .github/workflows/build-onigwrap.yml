@@ -20,12 +20,12 @@ jobs:
         include:
             # Linux
           - name: Linux x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-linux-gnu
             libname: libonigwrap.so
             script: generic
           - name: Linux aarch64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: aarch64-linux-gnu
             libname: libonigwrap.so
             script: generic
@@ -42,12 +42,12 @@ jobs:
             script: generic
             # Android
           - name: Android x86_64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-linux-android30
             libname: libonigwrap.so
             script: android
           - name: Android aarch64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: aarch64-linux-android30
             libname: libonigwrap.so
             script: android
@@ -86,44 +86,44 @@ jobs:
             script: osx
             # Wasm
           - name: Wasm emsdk-2.0.23
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-2.0.23-st
             emsdk_version: 2.0.23
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.12
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.12-st
             emsdk_version: 3.1.12
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.34
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.34-st
             emsdk_version: 3.1.34
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.56
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.56-st
             emsdk_version: 3.1.56
             libname: libonigwrap.a
             script: wasm
             # Wasm (pthreads)
           - name: Wasm emsdk-3.1.12 (pthreads)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.12-mt
             emsdk_version: 3.1.12
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.34 (pthreads)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.34-mt
             emsdk_version: 3.1.34
             libname: libonigwrap.a
             script: wasm
           - name: Wasm emsdk-3.1.56 (pthreads)
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: emsdk-3.1.56-mt
             emsdk_version: 3.1.56
             libname: libonigwrap.a
@@ -149,7 +149,7 @@ jobs:
           repository: emscripten-core/emsdk
           path: emsdk
       - name: Install libtool
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+        if: ${{ startsWith(matrix.os, 'ubuntu-') }}
         run: |
           sudo apt-get update
           sudo apt-get install libtool-bin
