@@ -5,6 +5,8 @@
     <TargetFrameworks Condition="('$(OS)' != 'Windows_NT')">net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <LangVersion>8.0</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../Onigwrap/Onigwrap.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

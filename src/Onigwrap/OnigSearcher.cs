@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Onigwrap
@@ -15,7 +16,7 @@ namespace Onigwrap
             }
         }
 
-        public OnigResult Search(string source, in int charOffset)
+        public OnigResult Search(ReadOnlyMemory<char> source, in int charOffset)
         {
             int bestLocation = 0;
             OnigResult bestResult = null;
@@ -44,6 +45,5 @@ namespace Onigwrap
             }
             return bestResult;
         }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Onigwrap.Tests
 {
@@ -12,7 +13,7 @@ namespace Onigwrap.Tests
 
             string text = "other";
 
-            Assert.IsNull(searcher.Search(text, 0));
+            Assert.IsNull(searcher.Search(text.AsMemory(), 0));
         }
 
         [Test]
@@ -24,7 +25,7 @@ namespace Onigwrap.Tests
             string text = "鬼AAA";
 
             // finds a double-byte match at location 0
-            OnigResult result = searcher.Search(text, 0);
+            OnigResult result = searcher.Search(text.AsMemory(), 0);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
@@ -32,7 +33,7 @@ namespace Onigwrap.Tests
             Assert.AreEqual(1, result.LengthAt(0));
 
             // start searching at index 1, it should find a match
-            result = searcher.Search(text, 1);
+            result = searcher.Search(text.AsMemory(), 1);
 
             Assert.IsNull(result);
         }

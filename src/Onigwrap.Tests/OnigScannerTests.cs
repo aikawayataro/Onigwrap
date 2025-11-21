@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Onigwrap.Tests
 {
@@ -8,7 +9,7 @@ namespace Onigwrap.Tests
         public void Onig_Scanner_Should_Capture_Indices()
         {
             OnigScanner scanner = new OnigScanner(new[] { "c", "a(b)?" });
-            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync("abc", 0);
+            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync("abc".AsMemory(), 0);
 
             var captureIndices = onigResult.GetCaptureIndices();
 
@@ -24,7 +25,7 @@ namespace Onigwrap.Tests
         public void Onig_Scanner_Should_Capture_Indices2()
         {
             OnigScanner scanner = new OnigScanner(new[] { "a([b-d])c" });
-            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync("!abcdef", 0);
+            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync("!abcdef".AsMemory(), 0);
 
             var captureIndices = onigResult.GetCaptureIndices();
 
@@ -43,7 +44,7 @@ namespace Onigwrap.Tests
             string text = "#define VC7";
 
             OnigScanner scanner = new OnigScanner(new[] { pattern });
-            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync(text, 0);
+            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync(text.AsMemory(), 0);
 
             var captureIndices = onigResult.GetCaptureIndices();
 
@@ -70,7 +71,7 @@ namespace Onigwrap.Tests
             string text = "ab\U0001D11E";
 
             OnigScanner scanner = new OnigScanner(new[] { pattern });
-            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync(text, 0);
+            IOnigNextMatchResult onigResult = scanner.FindNextMatchSync(text.AsMemory(), 0);
 
             var captureIndices = onigResult.GetCaptureIndices();
 
