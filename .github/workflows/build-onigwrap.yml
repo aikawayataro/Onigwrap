@@ -188,6 +188,7 @@ jobs:
         if: ${{ matrix.msystem != '' }}
         uses: msys2/setup-msys2@v2
         with:
+          update: true
           msystem: ${{ matrix.msystem }}
           install: ${{ matrix.install }}
       - name: Setup emsdk
