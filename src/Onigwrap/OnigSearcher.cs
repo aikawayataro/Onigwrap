@@ -21,6 +21,7 @@ namespace Onigwrap
         {
             return Search(source.AsMemory(), charOffset);
         }
+
         public OnigResult Search(ReadOnlyMemory<char> source, in int charOffset)
         {
             int bestLocation = 0;
