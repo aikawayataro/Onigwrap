@@ -11,7 +11,7 @@ namespace Onigwrap
 
         public OnigRegExp(string source)
         {
-            _lastSearchString = null;
+            _lastSearchString = ReadOnlyMemory<char>.Empty;
             _lastSearchPosition = -1;
             _lastSearchResult = null;
 
