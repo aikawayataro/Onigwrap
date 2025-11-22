@@ -84,6 +84,16 @@ jobs:
             host: arm64-apple-macos11
             libname: libonigwrap.dylib
             script: osx
+          - name: Mac Catalyst Intel
+            os: macos-15
+            host: x86_64-apple-ios18-macabi
+            libname: libonigwrap.dylib
+            script: osx
+          - name: Mac Catalyst Silicon
+            os: macos-15
+            host: arm64-apple-ios18-macabi
+            libname: libonigwrap.dylib
+            script: osx
             # Wasm
           - name: Wasm emsdk-2.0.23
             os: ubuntu-22.04
@@ -229,6 +239,8 @@ jobs:
           install -D artifacts/aarch64-linux-android30.libonigwrap.so/libonigwrap.so -t runtimes/linux-bionic-arm64/native
           install -D artifacts/x86_64-apple-macos10.12.libonigwrap.dylib/libonigwrap.dylib -t runtimes/osx-x64/native
           install -D artifacts/arm64-apple-macos11.libonigwrap.dylib/libonigwrap.dylib -t runtimes/osx-arm64/native
+          install -D artifacts/x86_64-apple-ios18-macabi.libonigwrap.dylib/libonigwrap.dylib -t runtimes/maccatalyst-x64/native
+          install -D artifacts/arm64-apple-ios18-macabi.libonigwrap.dylib/libonigwrap.dylib -t runtimes/maccatalyst-arm64/native
           install -D artifacts/aarch64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-arm64/native
           install -D artifacts/x86_64-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x64/native
           install -D artifacts/i686-w64-mingw32.libonigwrap.dll/libonigwrap.dll -t runtimes/win-x86/native
