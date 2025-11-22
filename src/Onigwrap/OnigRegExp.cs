@@ -1,24 +1,31 @@
+using System;
+
 namespace Onigwrap
 {
     public class OnigRegExp
     {
-        private string _lastSearchString;
+        private ReadOnlyMemory<char> _lastSearchString;
         private int _lastSearchPosition;
         private OnigResult _lastSearchResult;
         private ORegex _regex;
 
         public OnigRegExp(string source)
         {
-            _lastSearchString = null;
+            _lastSearchString = ReadOnlyMemory<char>.Empty;
             _lastSearchPosition = -1;
             _lastSearchResult = null;
 
             _regex = new ORegex(source, false, false);
         }
 
-        public OnigResult Search(string str, in int position)
+        public OnigResult Search(string str, int position)
         {
-            if (_lastSearchString == str && _lastSearchPosition <= position &&
+            return Search(str.AsMemory(), position);
+        }
+
+        public OnigResult Search(ReadOnlyMemory<char> str, in int position)
+        {
+            if (_lastSearchString.Equals(str) && _lastSearchPosition <= position &&
                 (_lastSearchResult == null || _lastSearchResult.LocationAt(0) >= position))
             {
                 return _lastSearchResult;
@@ -30,9 +37,9 @@ namespace Onigwrap
             return _lastSearchResult;
         }
 
-        private OnigResult GetOnigResult(string data, in int position)
+        private OnigResult GetOnigResult(ReadOnlyMemory<char> data, in int position)
         {
-            return _regex.SafeSearch(data, position);
+            return _regex.SafeSearch(data.Span, position);
         }
     }
 }

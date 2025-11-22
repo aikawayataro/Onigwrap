@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Native runtime files
 /runtimes/
+
+# Idea Directory
+/.idea/

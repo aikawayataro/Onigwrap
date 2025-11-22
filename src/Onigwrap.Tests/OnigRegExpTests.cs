@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Onigwrap.Tests
 {
@@ -10,7 +11,7 @@ namespace Onigwrap.Tests
             OnigRegExp regExp = new OnigRegExp("[A-C]+");
 
             string str = "abcABC123";
-            OnigResult result = regExp.Search(str, 0);
+            OnigResult result = regExp.Search(str.AsMemory(), 0);
 
             Assert.AreEqual(1, result.Count());
             Assert.AreEqual(3, result.LocationAt(0));
@@ -23,7 +24,7 @@ namespace Onigwrap.Tests
             OnigRegExp regExp = new OnigRegExp("[á]+");
 
             string str = "00áá00";
-            OnigResult result = regExp.Search(str, 0);
+            OnigResult result = regExp.Search(str.AsMemory(), 0);
 
             Assert.AreEqual(1, result.Count());
             Assert.AreEqual(2, result.LocationAt(0));
@@ -38,7 +39,7 @@ namespace Onigwrap.Tests
 
             OnigRegExp regExp = new OnigRegExp(pattern);
 
-            OnigResult result = regExp.Search(text, 0);
+            OnigResult result = regExp.Search(text.AsMemory(), 0);
 
             Assert.AreEqual(1, result.Count());
             Assert.AreEqual(0, result.LocationAt(0));
@@ -53,7 +54,7 @@ namespace Onigwrap.Tests
 
             OnigRegExp regExp = new OnigRegExp(pattern);
 
-            OnigResult result = regExp.Search(text, 0);
+            OnigResult result = regExp.Search(text.AsMemory(), 0);
 
             Assert.AreEqual(1, result.Count());
             Assert.AreEqual(9, result.LocationAt(0));
@@ -98,8 +99,8 @@ namespace Onigwrap.Tests
             string str1 = "abcABC123";
             string str2 = "abc123ABC";
 
-            OnigResult result1 = regExp.Search(str1, 0);
-            OnigResult result2 = regExp.Search(str2, 0);
+            OnigResult result1 = regExp.Search(str1.AsMemory(), 0);
+            OnigResult result2 = regExp.Search(str2.AsMemory(), 0);
 
             Assert.AreEqual(1, result1.Count());
             Assert.AreEqual(3, result1.LocationAt(0));
@@ -108,6 +109,19 @@ namespace Onigwrap.Tests
             Assert.AreEqual(1, result2.Count());
             Assert.AreEqual(6, result2.LocationAt(0));
             Assert.AreEqual(3, result2.LengthAt(0));
+        }
+        
+        [Test]
+        public void Search_Within_Previous_Match_Should_Return_Same_Result()
+        {
+            OnigRegExp regExp = new OnigRegExp("[A-C]+");
+
+            string str = "abcABC123";
+
+            OnigResult result1 = regExp.Search(str.AsMemory(), 0);
+            OnigResult result2 = regExp.Search(str.AsMemory(), 2); // within the previous match
+
+            Assert.AreSame(result1, result2);
         }
     }
 }

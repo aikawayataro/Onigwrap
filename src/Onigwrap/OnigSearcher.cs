@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Onigwrap
@@ -15,7 +16,13 @@ namespace Onigwrap
             }
         }
 
-        public OnigResult Search(string source, in int charOffset)
+        // Overload for backward compatibility: accepts string and delegates to ReadOnlyMemory<char> version
+        public OnigResult Search(string source, int charOffset)
+        {
+            return Search(source.AsMemory(), charOffset);
+        }
+
+        public OnigResult Search(ReadOnlyMemory<char> source, in int charOffset)
         {
             int bestLocation = 0;
             OnigResult bestResult = null;
@@ -44,6 +51,5 @@ namespace Onigwrap
             }
             return bestResult;
         }
-
     }
 }

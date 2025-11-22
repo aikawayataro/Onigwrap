@@ -1,3 +1,5 @@
+using System;
+
 namespace Onigwrap
 {
     public class OnigScanner
@@ -10,6 +12,11 @@ namespace Onigwrap
         }
 
         public IOnigNextMatchResult FindNextMatchSync(string source, in int charOffset)
+        {
+            return FindNextMatchSync(source.AsMemory(), charOffset);
+        }
+        
+        public IOnigNextMatchResult FindNextMatchSync(ReadOnlyMemory<char> source, in int charOffset)
         {
             OnigResult bestResult = _searcher.Search(source, charOffset);
             if (bestResult != null)
