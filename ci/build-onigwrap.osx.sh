@@ -10,10 +10,10 @@ mkdir -p buildprefix
 pushd oniguruma
 
 autoreconf -i
-./configure --enable-shared=no --with-pic=yes --host="$_HOST" --prefix="$(realpath ../buildprefix)" || (cat config.log; exit 1)
+./configure --enable-shared=no --with-pic=yes --host="${_HOST%-macabi}" --prefix="$(realpath ../buildprefix)" || (cat config.log; exit 1)
 make
 make install
 
 popd
 
-$CC -dynamiclib -target $_HOST onigwrap/onigwrap.c $CFLAGS -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"
+$CC -dynamiclib onigwrap/onigwrap.c $CFLAGS -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"
