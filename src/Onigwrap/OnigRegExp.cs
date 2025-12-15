@@ -16,7 +16,7 @@ namespace Onigwrap
             _lastSearchPosition = -1;
             _lastSearchResult = null;
 
-            _regex = new ORegex(source, false, false);  
+            _regex = new ORegex(source, false, false);
         }
 
         public OnigResult Search(string str, int position)
