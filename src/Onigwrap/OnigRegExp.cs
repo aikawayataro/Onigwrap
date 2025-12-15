@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace Onigwrap
 {
@@ -15,7 +16,7 @@ namespace Onigwrap
             _lastSearchPosition = -1;
             _lastSearchResult = null;
 
-            _regex = new ORegex(source, false, false);
+            _regex = new ORegex(source, false, false);  
         }
 
         public OnigResult Search(string str, int position)
@@ -25,7 +26,14 @@ namespace Onigwrap
 
         public OnigResult Search(ReadOnlyMemory<char> str, in int position)
         {
-            if (_lastSearchString.Equals(str) && _lastSearchPosition <= position &&
+            // Only use cache for string-backed memory (immutable).
+            // Array-backed memory can have its content changed while keeping the same
+            // reference, making reference-based comparison unsafe (e.g., ArrayPool reuse).
+            bool isStringBacked = MemoryMarshal.TryGetString(str, out _, out _, out _);
+
+            if (isStringBacked &&
+                _lastSearchString.Equals(str) &&
+                _lastSearchPosition <= position &&
                 (_lastSearchResult == null || _lastSearchResult.LocationAt(0) >= position))
             {
                 return _lastSearchResult;
