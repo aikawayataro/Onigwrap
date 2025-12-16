@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using NUnit.Framework;
 
 namespace Onigwrap.Tests
@@ -122,6 +123,54 @@ namespace Onigwrap.Tests
             OnigResult result2 = regExp.Search(str.AsMemory(), 2); // within the previous match
 
             Assert.AreSame(result1, result2);
+        }
+
+        [Test]
+        public void ArrayPool_Buffer_Reuse_Should_Not_Return_Cached_Results_For_Different_Content()
+        {
+            // Pattern that matches digits
+            OnigRegExp regExp = new OnigRegExp("\\d+");
+
+            // Use a fixed-size buffer to ensure we get the same buffer back from ArrayPool
+            const int bufferSize = 10;
+
+            // First search: content has digits at position 0
+            char[] buffer1 = ArrayPool<char>.Shared.Rent(bufferSize);
+            try
+            {
+                "123abc____".CopyTo(0, buffer1, 0, bufferSize);
+                ReadOnlyMemory<char> memory1 = buffer1.AsMemory(0, bufferSize);
+
+                OnigResult result1 = regExp.Search(memory1, 0);
+                Assert.IsNotNull(result1, "First search should find digits");
+                Assert.AreEqual(0, result1.LocationAt(0), "First search: digits at position 0");
+                Assert.AreEqual(3, result1.LengthAt(0), "First search: 3 digits");
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(buffer1, clearArray: false);
+            }
+
+            // Second search: different content with digits at position 6
+            // We rent again to get the same buffer
+            char[] buffer2 = ArrayPool<char>.Shared.Rent(bufferSize);
+            try
+            {
+                "abcdef789_".CopyTo(0, buffer2, 0, bufferSize);
+                ReadOnlyMemory<char> memory2 = buffer2.AsMemory(0, bufferSize);
+
+                // If buffer2 == buffer1 (same underlying array), the cache will incorrectly
+                // return result1 because ReadOnlyMemory.Equals compares references not content
+                OnigResult result2 = regExp.Search(memory2, 0);
+
+                Assert.IsNotNull(result2, "Second search should find digits");
+                Assert.AreEqual(6, result2.LocationAt(0), "Second search: digits should be at position 6");
+                Assert.AreEqual(3, result2.LengthAt(0), "Second search: 3 digits");
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(buffer2, clearArray: false);
+            }
         }
     }
 }
