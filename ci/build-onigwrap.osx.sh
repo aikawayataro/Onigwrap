@@ -4,6 +4,7 @@ set -e
 
 export CC="clang -target $_HOST"
 export CFLAGS="-O2 -s"
+export LDFLAGS="-Wl,-headerpad_max_install_names"
 
 mkdir -p buildprefix
 
@@ -16,4 +17,4 @@ make install
 
 popd
 
-$CC -dynamiclib onigwrap/onigwrap.c $CFLAGS -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"
+$CC -dynamiclib onigwrap/onigwrap.c $CFLAGS $LDFLAGS -I./buildprefix/include -L./buildprefix/lib -lonig -o "$_LIBNAME"
