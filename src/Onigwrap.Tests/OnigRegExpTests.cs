@@ -126,6 +126,50 @@ namespace Onigwrap.Tests
         }
 
         [Test]
+        public void G_Anchor_Search_Should_Not_Reuse_No_Match_From_Earlier_Position()
+        {
+            OnigRegExp regExp = new OnigRegExp("\\Gb");
+
+            string str = "aab";
+
+            OnigResult result1 = regExp.Search(str.AsMemory(), 0);
+            OnigResult result2 = regExp.Search(str.AsMemory(), 2);
+
+            Assert.IsNull(result1);
+            Assert.IsNotNull(result2);
+            Assert.AreEqual(2, result2.LocationAt(0));
+        }
+
+        [Test]
+        public void G_Anchor_Search_Should_Not_Reuse_Later_Match_From_Earlier_Position()
+        {
+            OnigRegExp regExp = new OnigRegExp("c|\\Gb");
+
+            string str = "abc";
+
+            OnigResult result1 = regExp.Search(str.AsMemory(), 0);
+            OnigResult result2 = regExp.Search(str.AsMemory(), 1);
+
+            Assert.AreEqual(2, result1.LocationAt(0));
+            Assert.AreEqual(1, result2.LocationAt(0));
+        }
+
+        [Test]
+        public void G_Anchor_Inside_A_Group_Should_Not_Reuse_No_Match_From_Earlier_Position()
+        {
+            OnigRegExp regExp = new OnigRegExp("(?:\\Gb)");
+
+            string str = "aab";
+
+            OnigResult result1 = regExp.Search(str.AsMemory(), 0);
+            OnigResult result2 = regExp.Search(str.AsMemory(), 2);
+
+            Assert.IsNull(result1);
+            Assert.IsNotNull(result2);
+            Assert.AreEqual(2, result2.LocationAt(0));
+        }
+
+        [Test]
         public void ArrayPool_Buffer_Reuse_Should_Not_Return_Cached_Results_For_Different_Content()
         {
             // Pattern that matches digits

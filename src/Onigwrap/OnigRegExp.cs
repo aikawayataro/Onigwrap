@@ -9,6 +9,7 @@ namespace Onigwrap
         private int _lastSearchPosition;
         private OnigResult _lastSearchResult;
         private ORegex _regex;
+        private readonly bool _hasGAnchor;
 
         public OnigRegExp(string source)
         {
@@ -17,6 +18,9 @@ namespace Onigwrap
             _lastSearchResult = null;
 
             _regex = new ORegex(source, false, false);
+
+            // \G means the search position, so a result from an earlier position cannot be reused.
+            _hasGAnchor = source.IndexOf("\\G", StringComparison.Ordinal) >= 0;
         }
 
         public OnigResult Search(string str, int position)
@@ -31,7 +35,8 @@ namespace Onigwrap
             // reference, making reference-based comparison unsafe (e.g., ArrayPool reuse).
             bool isStringBacked = MemoryMarshal.TryGetString(str, out _, out _, out _);
 
-            if (isStringBacked &&
+            if (!_hasGAnchor &&
+                isStringBacked &&
                 _lastSearchString.Equals(str) &&
                 _lastSearchPosition <= position &&
                 (_lastSearchResult == null || _lastSearchResult.LocationAt(0) >= position))
