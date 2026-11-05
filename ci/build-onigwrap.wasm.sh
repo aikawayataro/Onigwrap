@@ -3,8 +3,6 @@
 set -e
 
 export CFLAGS="-O2 -s"
-# https://github.com/emscripten-core/emscripten/issues/16915
-export NODE_OPTIONS=--no-experimental-fetch
 
 if [[ "$_HOST" =~ "-mt"$ ]]; then
     export CFLAGS="$CFLAGS -pthread"
